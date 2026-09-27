@@ -1,0 +1,7 @@
+{
+  "artifactId" : "sunset-orchestrator",
+  "status" : "MOCK_API_UNAVAILABLE",
+  "message" : "mock server list API returned HTTP 401",
+  "endpointCount" : 0,
+  "generatedAt" : "2026-09-27T07:40:23.214574332Z"
+}
