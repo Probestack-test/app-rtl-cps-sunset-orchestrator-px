@@ -1,0 +1,674 @@
+{
+  "info" : {
+    "name" : "sunset-orchestrator Postman Collection",
+    "description" : "API deprecation lifecycle orchestration for the ForgeSphere platform.\nManages the graceful retirement of old API versions, SDKs, and endpoints \nacross all consumers. Automates the deprecation timeline — announce, \nmeasure usage, warn consumers, track migration, and finally sunset — \nwith zero unexpected breakage. Provides legal-grade evidence that \ndeprecation was fair and announced. Integrates with Contract Chronicle, \nNotifier, and Compliance Vault.\n\n\nOpenAPI version: 1.0.0",
+    "schema" : "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth" : {
+    "type" : "bearer",
+    "bearer" : [ {
+      "key" : "token",
+      "value" : "{{accessToken}}",
+      "type" : "string"
+    } ]
+  },
+  "variable" : [ {
+    "key" : "baseUrl",
+    "value" : "https://sunset.forgesphere.lightning.com/v1",
+    "type" : "string",
+    "description" : "Override with the base URL of the deployed Apigee proxy."
+  }, {
+    "key" : "accessToken",
+    "value" : "",
+    "type" : "string"
+  }, {
+    "key" : "deprecationId",
+    "value" : "",
+    "type" : "string"
+  }, {
+    "key" : "includeConsumers",
+    "value" : "",
+    "type" : "string",
+    "description" : "Include per-consumer migration status."
+  }, {
+    "key" : "migrationStatus",
+    "value" : "",
+    "type" : "string"
+  }, {
+    "key" : "consumerType",
+    "value" : "",
+    "type" : "string"
+  }, {
+    "key" : "orderBy",
+    "value" : "",
+    "type" : "string"
+  } ],
+  "item" : [ {
+    "name" : "Announce a new API deprecation",
+    "request" : {
+      "method" : "POST",
+      "description" : "Announce a new API deprecation\n\nResponses:\n- 201: Deprecation announced and lifecycle started.\n- 400: Invalid payload, missing fields, or invalid dates.\n- 409: This version is already deprecated or sunset.\n- 500: Traffic telemetry or notification engine unavailable.",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json",
+        "type" : "text"
+      } ],
+      "body" : {
+        "mode" : "raw",
+        "raw" : "{\"serviceName\":\"payment-processor\",\"deprecatedVersion\":\"v1\",\"deprecatedEndpoints\":[\"/api/v1/charge\",\"/api/v1/refund\"],\"sunsetDate\":1806451200000,\"replacementVersion\":\"v2\",\"replacementMigrationGuideUrl\":\"https://docs.forgesphere.com/payment-processor/v1-to-v2\",\"deprecationPolicy\":\"STANDARD_6M\",\"reason\":\"v1 uses deprecated RSA-1024 TLS; not PCI-DSS compliant.\",\"regulatoryDrivers\":[\"PCI_DSS\"],\"autoNotifyConsumers\":true,\"escalationSchedule\":[{\"daysBeforeSunset\":90,\"action\":\"WARNING\",\"channels\":[\"EMAIL\",\"SLACK\",\"DASHBOARD_BANNER\"]}],\"owner\":\"payments-team\",\"approvers\":[\"cto@forgesphere.example.com\",\"ciso@forgesphere.example.com\"],\"tags\":[\"pci-dss\",\"v1-retirement\",\"security-critical\"]}",
+        "options" : {
+          "raw" : {
+            "language" : "json"
+          }
+        }
+      },
+      "url" : {
+        "raw" : "{{baseUrl}}/announcements",
+        "host" : [ "{{baseUrl}}" ],
+        "path" : [ "announcements" ]
+      }
+    },
+    "response" : [ {
+      "name" : "201 Deprecation announced and lifecycle started.",
+      "originalRequest" : {
+        "method" : "POST",
+        "description" : "Announce a new API deprecation\n\nResponses:\n- 201: Deprecation announced and lifecycle started.\n- 400: Invalid payload, missing fields, or invalid dates.\n- 409: This version is already deprecated or sunset.\n- 500: Traffic telemetry or notification engine unavailable.",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json",
+          "type" : "text"
+        } ],
+        "body" : {
+          "mode" : "raw",
+          "raw" : "{\"serviceName\":\"payment-processor\",\"deprecatedVersion\":\"v1\",\"deprecatedEndpoints\":[\"/api/v1/charge\",\"/api/v1/refund\"],\"sunsetDate\":1806451200000,\"replacementVersion\":\"v2\",\"replacementMigrationGuideUrl\":\"https://docs.forgesphere.com/payment-processor/v1-to-v2\",\"deprecationPolicy\":\"STANDARD_6M\",\"reason\":\"v1 uses deprecated RSA-1024 TLS; not PCI-DSS compliant.\",\"regulatoryDrivers\":[\"PCI_DSS\"],\"autoNotifyConsumers\":true,\"escalationSchedule\":[{\"daysBeforeSunset\":90,\"action\":\"WARNING\",\"channels\":[\"EMAIL\",\"SLACK\",\"DASHBOARD_BANNER\"]}],\"owner\":\"payments-team\",\"approvers\":[\"cto@forgesphere.example.com\",\"ciso@forgesphere.example.com\"],\"tags\":[\"pci-dss\",\"v1-retirement\",\"security-critical\"]}",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        },
+        "url" : {
+          "raw" : "{{baseUrl}}/announcements",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "announcements" ]
+        }
+      },
+      "status" : "Deprecation announced and lifecycle started.",
+      "code" : 201,
+      "_postman_previewlanguage" : "json",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"deprecationId\":\"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\"serviceName\":\"payment-processor\",\"deprecatedVersion\":\"v1\",\"deprecatedEndpoints\":[\"/api/v1/charge\",\"/api/v1/refund\"],\"replacementVersion\":\"v2\",\"replacementMigrationGuideUrl\":\"https://docs.forgesphere.com/payment-processor/v1-to-v2\",\"deprecationPolicy\":\"STANDARD_6M\",\"reason\":\"v1 uses deprecated RSA-1024 TLS; not PCI-DSS compliant.\",\"regulatoryDrivers\":[\"PCI_DSS\"],\"sunsetDate\":1806451200000,\"announcedAt\":\"2026-01-01T00:00:00Z\",\"daysUntilSunset\":186,\"status\":\"WARNING_PHASE\",\"currentMilestone\":{\"milestone\":\"CRITICAL_WARNING\",\"triggeredAt\":\"2026-01-01T00:00:00Z\",\"nextMilestone\":\"RATE_LIMIT\",\"nextMilestoneDate\":1798761600000},\"usageMetrics\":{\"callsLast7d\":128450,\"callsLast30d\":4582300,\"trend30d\":\"DECLINING\",\"uniqueConsumers\":14,\"topConsumers\":[{\"consumerName\":\"mobile-app-android\",\"callsLast7d\":45200,\"migrationStatus\":\"NOT_STARTED\"}]},\"migrationProgress\":{\"totalConsumers\":14,\"migrated\":8,\"inProgress\":4,\"notStarted\":2,\"blocked\":0,\"percentMigrated\":57.1,\"estimatedFullMigrationDate\":1802649600000},\"owner\":\"payments-team\",\"approvers\":[\"sample\"],\"escalationSchedule\":[{\"daysBeforeSunset\":90,\"action\":\"WARNING\",\"channels\":[\"[\\\"EMAIL\\\",\\\"SLACK\\\"]\"],\"triggered\":true,\"triggeredAt\":\"2026-01-01T00:00:00Z\"}],\"consumers\":[{\"consumerId\":\"a1b2c3d4-e5f6-7890-1234-567890abcdef\",\"consumerName\":\"mobile-app-android\",\"consumerType\":\"MOBILE_APP\",\"owner\":\"mobile-team\",\"ownerContact\":\"mobile-lead@forgesphere.example.com\",\"migrationStatus\":\"NOT_STARTED\",\"lastAcknowledgedAt\":\"2026-01-01T00:00:00Z\",\"callsLast7d\":45200,\"callsLast30d\":198450,\"percentOfTotalTraffic\":35.2,\"uniqueEndpointsUsed\":[\"/api/v1/charge\"],\"trend30d\":\"STABLE\",\"riskScore\":85,\"riskFactors\":[\"No migration started\",\"High call volume\",\"External customer\"],\"migrationPlan\":{\"expectedMigrationDate\":1799971200000,\"assignedEngineer\":\"mobile-engineer@forgesphere.example.com\",\"progressPercent\":15},\"lastCallAt\":\"2026-01-01T00:00:00Z\",\"escalatedAt\":\"2026-01-01T00:00:00Z\"}],\"auditReference\":\"audit://sunset/deprecation-9c8f1a3b\",\"tags\":[\"pci-dss\",\"v1-retirement\"]}"
+    }, {
+      "name" : "400 Invalid payload, missing fields, or invalid dates.",
+      "originalRequest" : {
+        "method" : "POST",
+        "description" : "Announce a new API deprecation\n\nResponses:\n- 201: Deprecation announced and lifecycle started.\n- 400: Invalid payload, missing fields, or invalid dates.\n- 409: This version is already deprecated or sunset.\n- 500: Traffic telemetry or notification engine unavailable.",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json",
+          "type" : "text"
+        } ],
+        "body" : {
+          "mode" : "raw",
+          "raw" : "{\"serviceName\":\"payment-processor\",\"deprecatedVersion\":\"v1\",\"deprecatedEndpoints\":[\"/api/v1/charge\",\"/api/v1/refund\"],\"sunsetDate\":1806451200000,\"replacementVersion\":\"v2\",\"replacementMigrationGuideUrl\":\"https://docs.forgesphere.com/payment-processor/v1-to-v2\",\"deprecationPolicy\":\"STANDARD_6M\",\"reason\":\"v1 uses deprecated RSA-1024 TLS; not PCI-DSS compliant.\",\"regulatoryDrivers\":[\"PCI_DSS\"],\"autoNotifyConsumers\":true,\"escalationSchedule\":[{\"daysBeforeSunset\":90,\"action\":\"WARNING\",\"channels\":[\"EMAIL\",\"SLACK\",\"DASHBOARD_BANNER\"]}],\"owner\":\"payments-team\",\"approvers\":[\"cto@forgesphere.example.com\",\"ciso@forgesphere.example.com\"],\"tags\":[\"pci-dss\",\"v1-retirement\",\"security-critical\"]}",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        },
+        "url" : {
+          "raw" : "{{baseUrl}}/announcements",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "announcements" ]
+        }
+      },
+      "status" : "Invalid payload, missing fields, or invalid dates.",
+      "code" : 400,
+      "_postman_previewlanguage" : "json",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"status\":409,\"errorCode\":\"ALREADY_DEPRECATED\",\"message\":\"payment-processor v1 is already under deprecation (id: 9c8f1a3b).\",\"timestamp\":\"2026-01-01T00:00:00Z\",\"path\":\"/v1/announcements\"}"
+    }, {
+      "name" : "409 This version is already deprecated or sunset.",
+      "originalRequest" : {
+        "method" : "POST",
+        "description" : "Announce a new API deprecation\n\nResponses:\n- 201: Deprecation announced and lifecycle started.\n- 400: Invalid payload, missing fields, or invalid dates.\n- 409: This version is already deprecated or sunset.\n- 500: Traffic telemetry or notification engine unavailable.",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json",
+          "type" : "text"
+        } ],
+        "body" : {
+          "mode" : "raw",
+          "raw" : "{\"serviceName\":\"payment-processor\",\"deprecatedVersion\":\"v1\",\"deprecatedEndpoints\":[\"/api/v1/charge\",\"/api/v1/refund\"],\"sunsetDate\":1806451200000,\"replacementVersion\":\"v2\",\"replacementMigrationGuideUrl\":\"https://docs.forgesphere.com/payment-processor/v1-to-v2\",\"deprecationPolicy\":\"STANDARD_6M\",\"reason\":\"v1 uses deprecated RSA-1024 TLS; not PCI-DSS compliant.\",\"regulatoryDrivers\":[\"PCI_DSS\"],\"autoNotifyConsumers\":true,\"escalationSchedule\":[{\"daysBeforeSunset\":90,\"action\":\"WARNING\",\"channels\":[\"EMAIL\",\"SLACK\",\"DASHBOARD_BANNER\"]}],\"owner\":\"payments-team\",\"approvers\":[\"cto@forgesphere.example.com\",\"ciso@forgesphere.example.com\"],\"tags\":[\"pci-dss\",\"v1-retirement\",\"security-critical\"]}",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        },
+        "url" : {
+          "raw" : "{{baseUrl}}/announcements",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "announcements" ]
+        }
+      },
+      "status" : "This version is already deprecated or sunset.",
+      "code" : 409,
+      "_postman_previewlanguage" : "json",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"status\":409,\"errorCode\":\"ALREADY_DEPRECATED\",\"message\":\"payment-processor v1 is already under deprecation (id: 9c8f1a3b).\",\"timestamp\":\"2026-01-01T00:00:00Z\",\"path\":\"/v1/announcements\"}"
+    }, {
+      "name" : "500 Traffic telemetry or notification engine unavailable.",
+      "originalRequest" : {
+        "method" : "POST",
+        "description" : "Announce a new API deprecation\n\nResponses:\n- 201: Deprecation announced and lifecycle started.\n- 400: Invalid payload, missing fields, or invalid dates.\n- 409: This version is already deprecated or sunset.\n- 500: Traffic telemetry or notification engine unavailable.",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json",
+          "type" : "text"
+        } ],
+        "body" : {
+          "mode" : "raw",
+          "raw" : "{\"serviceName\":\"payment-processor\",\"deprecatedVersion\":\"v1\",\"deprecatedEndpoints\":[\"/api/v1/charge\",\"/api/v1/refund\"],\"sunsetDate\":1806451200000,\"replacementVersion\":\"v2\",\"replacementMigrationGuideUrl\":\"https://docs.forgesphere.com/payment-processor/v1-to-v2\",\"deprecationPolicy\":\"STANDARD_6M\",\"reason\":\"v1 uses deprecated RSA-1024 TLS; not PCI-DSS compliant.\",\"regulatoryDrivers\":[\"PCI_DSS\"],\"autoNotifyConsumers\":true,\"escalationSchedule\":[{\"daysBeforeSunset\":90,\"action\":\"WARNING\",\"channels\":[\"EMAIL\",\"SLACK\",\"DASHBOARD_BANNER\"]}],\"owner\":\"payments-team\",\"approvers\":[\"cto@forgesphere.example.com\",\"ciso@forgesphere.example.com\"],\"tags\":[\"pci-dss\",\"v1-retirement\",\"security-critical\"]}",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        },
+        "url" : {
+          "raw" : "{{baseUrl}}/announcements",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "announcements" ]
+        }
+      },
+      "status" : "Traffic telemetry or notification engine unavailable.",
+      "code" : 500,
+      "_postman_previewlanguage" : "json",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"status\":409,\"errorCode\":\"ALREADY_DEPRECATED\",\"message\":\"payment-processor v1 is already under deprecation (id: 9c8f1a3b).\",\"timestamp\":\"2026-01-01T00:00:00Z\",\"path\":\"/v1/announcements\"}"
+    } ]
+  }, {
+    "name" : "Get live status of a deprecation",
+    "request" : {
+      "method" : "GET",
+      "description" : "Get live status of a deprecation\n\nResponses:\n- 200: Full deprecation status.\n- 404: Deprecation ID not found.\n- 500: Traffic telemetry or notification engine unavailable.",
+      "header" : [ ],
+      "url" : {
+        "raw" : "{{baseUrl}}/deprecations/:deprecationId?includeConsumers={{includeConsumers}}",
+        "host" : [ "{{baseUrl}}" ],
+        "path" : [ "deprecations", ":deprecationId" ],
+        "query" : [ {
+          "key" : "includeConsumers",
+          "value" : "true",
+          "disabled" : true,
+          "description" : "Include per-consumer migration status."
+        } ],
+        "variable" : [ {
+          "key" : "deprecationId",
+          "value" : "00000000-0000-0000-0000-000000000001"
+        } ]
+      }
+    },
+    "response" : [ {
+      "name" : "200 Full deprecation status.",
+      "originalRequest" : {
+        "method" : "GET",
+        "description" : "Get live status of a deprecation\n\nResponses:\n- 200: Full deprecation status.\n- 404: Deprecation ID not found.\n- 500: Traffic telemetry or notification engine unavailable.",
+        "header" : [ ],
+        "url" : {
+          "raw" : "{{baseUrl}}/deprecations/:deprecationId?includeConsumers={{includeConsumers}}",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "deprecations", ":deprecationId" ],
+          "query" : [ {
+            "key" : "includeConsumers",
+            "value" : "true",
+            "disabled" : true,
+            "description" : "Include per-consumer migration status."
+          } ],
+          "variable" : [ {
+            "key" : "deprecationId",
+            "value" : "00000000-0000-0000-0000-000000000001"
+          } ]
+        }
+      },
+      "status" : "Full deprecation status.",
+      "code" : 200,
+      "_postman_previewlanguage" : "json",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"deprecationId\":\"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\"serviceName\":\"payment-processor\",\"deprecatedVersion\":\"v1\",\"deprecatedEndpoints\":[\"/api/v1/charge\",\"/api/v1/refund\"],\"replacementVersion\":\"v2\",\"replacementMigrationGuideUrl\":\"https://docs.forgesphere.com/payment-processor/v1-to-v2\",\"deprecationPolicy\":\"STANDARD_6M\",\"reason\":\"v1 uses deprecated RSA-1024 TLS; not PCI-DSS compliant.\",\"regulatoryDrivers\":[\"PCI_DSS\"],\"sunsetDate\":1806451200000,\"announcedAt\":\"2026-01-01T00:00:00Z\",\"daysUntilSunset\":186,\"status\":\"WARNING_PHASE\",\"currentMilestone\":{\"milestone\":\"CRITICAL_WARNING\",\"triggeredAt\":\"2026-01-01T00:00:00Z\",\"nextMilestone\":\"RATE_LIMIT\",\"nextMilestoneDate\":1798761600000},\"usageMetrics\":{\"callsLast7d\":128450,\"callsLast30d\":4582300,\"trend30d\":\"DECLINING\",\"uniqueConsumers\":14,\"topConsumers\":[{\"consumerName\":\"mobile-app-android\",\"callsLast7d\":45200,\"migrationStatus\":\"NOT_STARTED\"}]},\"migrationProgress\":{\"totalConsumers\":14,\"migrated\":8,\"inProgress\":4,\"notStarted\":2,\"blocked\":0,\"percentMigrated\":57.1,\"estimatedFullMigrationDate\":1802649600000},\"owner\":\"payments-team\",\"approvers\":[\"sample\"],\"escalationSchedule\":[{\"daysBeforeSunset\":90,\"action\":\"WARNING\",\"channels\":[\"[\\\"EMAIL\\\",\\\"SLACK\\\"]\"],\"triggered\":true,\"triggeredAt\":\"2026-01-01T00:00:00Z\"}],\"consumers\":[{\"consumerId\":\"a1b2c3d4-e5f6-7890-1234-567890abcdef\",\"consumerName\":\"mobile-app-android\",\"consumerType\":\"MOBILE_APP\",\"owner\":\"mobile-team\",\"ownerContact\":\"mobile-lead@forgesphere.example.com\",\"migrationStatus\":\"NOT_STARTED\",\"lastAcknowledgedAt\":\"2026-01-01T00:00:00Z\",\"callsLast7d\":45200,\"callsLast30d\":198450,\"percentOfTotalTraffic\":35.2,\"uniqueEndpointsUsed\":[\"/api/v1/charge\"],\"trend30d\":\"STABLE\",\"riskScore\":85,\"riskFactors\":[\"No migration started\",\"High call volume\",\"External customer\"],\"migrationPlan\":{\"expectedMigrationDate\":1799971200000,\"assignedEngineer\":\"mobile-engineer@forgesphere.example.com\",\"progressPercent\":15},\"lastCallAt\":\"2026-01-01T00:00:00Z\",\"escalatedAt\":\"2026-01-01T00:00:00Z\"}],\"auditReference\":\"audit://sunset/deprecation-9c8f1a3b\",\"tags\":[\"pci-dss\",\"v1-retirement\"]}"
+    }, {
+      "name" : "404 Deprecation ID not found.",
+      "originalRequest" : {
+        "method" : "GET",
+        "description" : "Get live status of a deprecation\n\nResponses:\n- 200: Full deprecation status.\n- 404: Deprecation ID not found.\n- 500: Traffic telemetry or notification engine unavailable.",
+        "header" : [ ],
+        "url" : {
+          "raw" : "{{baseUrl}}/deprecations/:deprecationId?includeConsumers={{includeConsumers}}",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "deprecations", ":deprecationId" ],
+          "query" : [ {
+            "key" : "includeConsumers",
+            "value" : "true",
+            "disabled" : true,
+            "description" : "Include per-consumer migration status."
+          } ],
+          "variable" : [ {
+            "key" : "deprecationId",
+            "value" : "00000000-0000-0000-0000-000000000001"
+          } ]
+        }
+      },
+      "status" : "Deprecation ID not found.",
+      "code" : 404,
+      "_postman_previewlanguage" : "json",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"status\":409,\"errorCode\":\"ALREADY_DEPRECATED\",\"message\":\"payment-processor v1 is already under deprecation (id: 9c8f1a3b).\",\"timestamp\":\"2026-01-01T00:00:00Z\",\"path\":\"/v1/announcements\"}"
+    }, {
+      "name" : "500 Traffic telemetry or notification engine unavailable.",
+      "originalRequest" : {
+        "method" : "GET",
+        "description" : "Get live status of a deprecation\n\nResponses:\n- 200: Full deprecation status.\n- 404: Deprecation ID not found.\n- 500: Traffic telemetry or notification engine unavailable.",
+        "header" : [ ],
+        "url" : {
+          "raw" : "{{baseUrl}}/deprecations/:deprecationId?includeConsumers={{includeConsumers}}",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "deprecations", ":deprecationId" ],
+          "query" : [ {
+            "key" : "includeConsumers",
+            "value" : "true",
+            "disabled" : true,
+            "description" : "Include per-consumer migration status."
+          } ],
+          "variable" : [ {
+            "key" : "deprecationId",
+            "value" : "00000000-0000-0000-0000-000000000001"
+          } ]
+        }
+      },
+      "status" : "Traffic telemetry or notification engine unavailable.",
+      "code" : 500,
+      "_postman_previewlanguage" : "json",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"status\":409,\"errorCode\":\"ALREADY_DEPRECATED\",\"message\":\"payment-processor v1 is already under deprecation (id: 9c8f1a3b).\",\"timestamp\":\"2026-01-01T00:00:00Z\",\"path\":\"/v1/announcements\"}"
+    } ]
+  }, {
+    "name" : "List all consumers of the deprecated API and their migration status",
+    "request" : {
+      "method" : "GET",
+      "description" : "List all consumers of the deprecated API and their migration status\n\nResponses:\n- 200: List of consumers with migration status.\n- 404: Deprecation ID not found.\n- 500: Traffic telemetry or notification engine unavailable.",
+      "header" : [ ],
+      "url" : {
+        "raw" : "{{baseUrl}}/deprecations/:deprecationId/consumers?migrationStatus={{migrationStatus}}&consumerType={{consumerType}}&orderBy={{orderBy}}",
+        "host" : [ "{{baseUrl}}" ],
+        "path" : [ "deprecations", ":deprecationId", "consumers" ],
+        "query" : [ {
+          "key" : "migrationStatus",
+          "value" : "MIGRATED",
+          "disabled" : true
+        }, {
+          "key" : "consumerType",
+          "value" : "INTERNAL_SERVICE",
+          "disabled" : true
+        }, {
+          "key" : "orderBy",
+          "value" : "USAGE_VOLUME",
+          "disabled" : true
+        } ],
+        "variable" : [ {
+          "key" : "deprecationId",
+          "value" : "00000000-0000-0000-0000-000000000001"
+        } ]
+      }
+    },
+    "response" : [ {
+      "name" : "200 List of consumers with migration status.",
+      "originalRequest" : {
+        "method" : "GET",
+        "description" : "List all consumers of the deprecated API and their migration status\n\nResponses:\n- 200: List of consumers with migration status.\n- 404: Deprecation ID not found.\n- 500: Traffic telemetry or notification engine unavailable.",
+        "header" : [ ],
+        "url" : {
+          "raw" : "{{baseUrl}}/deprecations/:deprecationId/consumers?migrationStatus={{migrationStatus}}&consumerType={{consumerType}}&orderBy={{orderBy}}",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "deprecations", ":deprecationId", "consumers" ],
+          "query" : [ {
+            "key" : "migrationStatus",
+            "value" : "MIGRATED",
+            "disabled" : true
+          }, {
+            "key" : "consumerType",
+            "value" : "INTERNAL_SERVICE",
+            "disabled" : true
+          }, {
+            "key" : "orderBy",
+            "value" : "USAGE_VOLUME",
+            "disabled" : true
+          } ],
+          "variable" : [ {
+            "key" : "deprecationId",
+            "value" : "00000000-0000-0000-0000-000000000001"
+          } ]
+        }
+      },
+      "status" : "List of consumers with migration status.",
+      "code" : 200,
+      "_postman_previewlanguage" : "json",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"deprecationId\":\"00000000-0000-0000-0000-000000000001\",\"totalConsumers\":14,\"consumers\":[{\"consumerId\":\"a1b2c3d4-e5f6-7890-1234-567890abcdef\",\"consumerName\":\"mobile-app-android\",\"consumerType\":\"MOBILE_APP\",\"owner\":\"mobile-team\",\"ownerContact\":\"mobile-lead@forgesphere.example.com\",\"migrationStatus\":\"NOT_STARTED\",\"lastAcknowledgedAt\":\"2026-01-01T00:00:00Z\",\"callsLast7d\":45200,\"callsLast30d\":198450,\"percentOfTotalTraffic\":35.2,\"uniqueEndpointsUsed\":[\"/api/v1/charge\"],\"trend30d\":\"STABLE\",\"riskScore\":85,\"riskFactors\":[\"No migration started\",\"High call volume\",\"External customer\"],\"migrationPlan\":{\"expectedMigrationDate\":1799971200000,\"assignedEngineer\":\"mobile-engineer@forgesphere.example.com\",\"progressPercent\":15},\"lastCallAt\":\"2026-01-01T00:00:00Z\",\"escalatedAt\":\"2026-01-01T00:00:00Z\"}],\"summary\":{\"percentMigrated\":57.1,\"percentTrafficMigrated\":42.5,\"atRiskConsumers\":3,\"estimatedSunsetReadiness\":\"ON_TRACK\"},\"generatedAt\":\"2026-01-01T00:00:00Z\"}"
+    }, {
+      "name" : "404 Deprecation ID not found.",
+      "originalRequest" : {
+        "method" : "GET",
+        "description" : "List all consumers of the deprecated API and their migration status\n\nResponses:\n- 200: List of consumers with migration status.\n- 404: Deprecation ID not found.\n- 500: Traffic telemetry or notification engine unavailable.",
+        "header" : [ ],
+        "url" : {
+          "raw" : "{{baseUrl}}/deprecations/:deprecationId/consumers?migrationStatus={{migrationStatus}}&consumerType={{consumerType}}&orderBy={{orderBy}}",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "deprecations", ":deprecationId", "consumers" ],
+          "query" : [ {
+            "key" : "migrationStatus",
+            "value" : "MIGRATED",
+            "disabled" : true
+          }, {
+            "key" : "consumerType",
+            "value" : "INTERNAL_SERVICE",
+            "disabled" : true
+          }, {
+            "key" : "orderBy",
+            "value" : "USAGE_VOLUME",
+            "disabled" : true
+          } ],
+          "variable" : [ {
+            "key" : "deprecationId",
+            "value" : "00000000-0000-0000-0000-000000000001"
+          } ]
+        }
+      },
+      "status" : "Deprecation ID not found.",
+      "code" : 404,
+      "_postman_previewlanguage" : "json",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"status\":409,\"errorCode\":\"ALREADY_DEPRECATED\",\"message\":\"payment-processor v1 is already under deprecation (id: 9c8f1a3b).\",\"timestamp\":\"2026-01-01T00:00:00Z\",\"path\":\"/v1/announcements\"}"
+    }, {
+      "name" : "500 Traffic telemetry or notification engine unavailable.",
+      "originalRequest" : {
+        "method" : "GET",
+        "description" : "List all consumers of the deprecated API and their migration status\n\nResponses:\n- 200: List of consumers with migration status.\n- 404: Deprecation ID not found.\n- 500: Traffic telemetry or notification engine unavailable.",
+        "header" : [ ],
+        "url" : {
+          "raw" : "{{baseUrl}}/deprecations/:deprecationId/consumers?migrationStatus={{migrationStatus}}&consumerType={{consumerType}}&orderBy={{orderBy}}",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "deprecations", ":deprecationId", "consumers" ],
+          "query" : [ {
+            "key" : "migrationStatus",
+            "value" : "MIGRATED",
+            "disabled" : true
+          }, {
+            "key" : "consumerType",
+            "value" : "INTERNAL_SERVICE",
+            "disabled" : true
+          }, {
+            "key" : "orderBy",
+            "value" : "USAGE_VOLUME",
+            "disabled" : true
+          } ],
+          "variable" : [ {
+            "key" : "deprecationId",
+            "value" : "00000000-0000-0000-0000-000000000001"
+          } ]
+        }
+      },
+      "status" : "Traffic telemetry or notification engine unavailable.",
+      "code" : 500,
+      "_postman_previewlanguage" : "json",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"status\":409,\"errorCode\":\"ALREADY_DEPRECATED\",\"message\":\"payment-processor v1 is already under deprecation (id: 9c8f1a3b).\",\"timestamp\":\"2026-01-01T00:00:00Z\",\"path\":\"/v1/announcements\"}"
+    } ]
+  }, {
+    "name" : "Extend the sunset deadline or cancel the deprecation",
+    "request" : {
+      "method" : "POST",
+      "description" : "Extend the sunset deadline or cancel the deprecation\n\nResponses:\n- 200: Deprecation timeline updated.\n- 400: Invalid payload, missing fields, or invalid dates.\n- 403: CANCEL requires CTO or legal approval.\n- 404: Deprecation ID not found.\n- 500: Traffic telemetry or notification engine unavailable.",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json",
+        "type" : "text"
+      } ],
+      "body" : {
+        "mode" : "raw",
+        "raw" : "{\"action\":\"EXTEND\",\"newSunsetDate\":1814313600000,\"reason\":\"Three external partners requested additional migration time due to their release cycles.\",\"approvedBy\":\"cto@forgesphere.example.com\",\"legalJustification\":\"Regulatory clarification received — v1 remains compliant under updated rules.\",\"notifyConsumers\":true,\"notifyChannels\":[\"EMAIL\",\"DASHBOARD_BANNER\"]}",
+        "options" : {
+          "raw" : {
+            "language" : "json"
+          }
+        }
+      },
+      "url" : {
+        "raw" : "{{baseUrl}}/deprecations/:deprecationId/extend",
+        "host" : [ "{{baseUrl}}" ],
+        "path" : [ "deprecations", ":deprecationId", "extend" ],
+        "variable" : [ {
+          "key" : "deprecationId",
+          "value" : "00000000-0000-0000-0000-000000000001"
+        } ]
+      }
+    },
+    "response" : [ {
+      "name" : "200 Deprecation timeline updated.",
+      "originalRequest" : {
+        "method" : "POST",
+        "description" : "Extend the sunset deadline or cancel the deprecation\n\nResponses:\n- 200: Deprecation timeline updated.\n- 400: Invalid payload, missing fields, or invalid dates.\n- 403: CANCEL requires CTO or legal approval.\n- 404: Deprecation ID not found.\n- 500: Traffic telemetry or notification engine unavailable.",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json",
+          "type" : "text"
+        } ],
+        "body" : {
+          "mode" : "raw",
+          "raw" : "{\"action\":\"EXTEND\",\"newSunsetDate\":1814313600000,\"reason\":\"Three external partners requested additional migration time due to their release cycles.\",\"approvedBy\":\"cto@forgesphere.example.com\",\"legalJustification\":\"Regulatory clarification received — v1 remains compliant under updated rules.\",\"notifyConsumers\":true,\"notifyChannels\":[\"EMAIL\",\"DASHBOARD_BANNER\"]}",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        },
+        "url" : {
+          "raw" : "{{baseUrl}}/deprecations/:deprecationId/extend",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "deprecations", ":deprecationId", "extend" ],
+          "variable" : [ {
+            "key" : "deprecationId",
+            "value" : "00000000-0000-0000-0000-000000000001"
+          } ]
+        }
+      },
+      "status" : "Deprecation timeline updated.",
+      "code" : 200,
+      "_postman_previewlanguage" : "json",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"deprecationId\":\"9c8f1a3b-6d7e-4a12-8f5e-123456789abc\",\"serviceName\":\"payment-processor\",\"deprecatedVersion\":\"v1\",\"deprecatedEndpoints\":[\"/api/v1/charge\",\"/api/v1/refund\"],\"replacementVersion\":\"v2\",\"replacementMigrationGuideUrl\":\"https://docs.forgesphere.com/payment-processor/v1-to-v2\",\"deprecationPolicy\":\"STANDARD_6M\",\"reason\":\"v1 uses deprecated RSA-1024 TLS; not PCI-DSS compliant.\",\"regulatoryDrivers\":[\"PCI_DSS\"],\"sunsetDate\":1806451200000,\"announcedAt\":\"2026-01-01T00:00:00Z\",\"daysUntilSunset\":186,\"status\":\"WARNING_PHASE\",\"currentMilestone\":{\"milestone\":\"CRITICAL_WARNING\",\"triggeredAt\":\"2026-01-01T00:00:00Z\",\"nextMilestone\":\"RATE_LIMIT\",\"nextMilestoneDate\":1798761600000},\"usageMetrics\":{\"callsLast7d\":128450,\"callsLast30d\":4582300,\"trend30d\":\"DECLINING\",\"uniqueConsumers\":14,\"topConsumers\":[{\"consumerName\":\"mobile-app-android\",\"callsLast7d\":45200,\"migrationStatus\":\"NOT_STARTED\"}]},\"migrationProgress\":{\"totalConsumers\":14,\"migrated\":8,\"inProgress\":4,\"notStarted\":2,\"blocked\":0,\"percentMigrated\":57.1,\"estimatedFullMigrationDate\":1802649600000},\"owner\":\"payments-team\",\"approvers\":[\"sample\"],\"escalationSchedule\":[{\"daysBeforeSunset\":90,\"action\":\"WARNING\",\"channels\":[\"[\\\"EMAIL\\\",\\\"SLACK\\\"]\"],\"triggered\":true,\"triggeredAt\":\"2026-01-01T00:00:00Z\"}],\"consumers\":[{\"consumerId\":\"a1b2c3d4-e5f6-7890-1234-567890abcdef\",\"consumerName\":\"mobile-app-android\",\"consumerType\":\"MOBILE_APP\",\"owner\":\"mobile-team\",\"ownerContact\":\"mobile-lead@forgesphere.example.com\",\"migrationStatus\":\"NOT_STARTED\",\"lastAcknowledgedAt\":\"2026-01-01T00:00:00Z\",\"callsLast7d\":45200,\"callsLast30d\":198450,\"percentOfTotalTraffic\":35.2,\"uniqueEndpointsUsed\":[\"/api/v1/charge\"],\"trend30d\":\"STABLE\",\"riskScore\":85,\"riskFactors\":[\"No migration started\",\"High call volume\",\"External customer\"],\"migrationPlan\":{\"expectedMigrationDate\":1799971200000,\"assignedEngineer\":\"mobile-engineer@forgesphere.example.com\",\"progressPercent\":15},\"lastCallAt\":\"2026-01-01T00:00:00Z\",\"escalatedAt\":\"2026-01-01T00:00:00Z\"}],\"auditReference\":\"audit://sunset/deprecation-9c8f1a3b\",\"tags\":[\"pci-dss\",\"v1-retirement\"]}"
+    }, {
+      "name" : "400 Invalid payload, missing fields, or invalid dates.",
+      "originalRequest" : {
+        "method" : "POST",
+        "description" : "Extend the sunset deadline or cancel the deprecation\n\nResponses:\n- 200: Deprecation timeline updated.\n- 400: Invalid payload, missing fields, or invalid dates.\n- 403: CANCEL requires CTO or legal approval.\n- 404: Deprecation ID not found.\n- 500: Traffic telemetry or notification engine unavailable.",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json",
+          "type" : "text"
+        } ],
+        "body" : {
+          "mode" : "raw",
+          "raw" : "{\"action\":\"EXTEND\",\"newSunsetDate\":1814313600000,\"reason\":\"Three external partners requested additional migration time due to their release cycles.\",\"approvedBy\":\"cto@forgesphere.example.com\",\"legalJustification\":\"Regulatory clarification received — v1 remains compliant under updated rules.\",\"notifyConsumers\":true,\"notifyChannels\":[\"EMAIL\",\"DASHBOARD_BANNER\"]}",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        },
+        "url" : {
+          "raw" : "{{baseUrl}}/deprecations/:deprecationId/extend",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "deprecations", ":deprecationId", "extend" ],
+          "variable" : [ {
+            "key" : "deprecationId",
+            "value" : "00000000-0000-0000-0000-000000000001"
+          } ]
+        }
+      },
+      "status" : "Invalid payload, missing fields, or invalid dates.",
+      "code" : 400,
+      "_postman_previewlanguage" : "json",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"status\":409,\"errorCode\":\"ALREADY_DEPRECATED\",\"message\":\"payment-processor v1 is already under deprecation (id: 9c8f1a3b).\",\"timestamp\":\"2026-01-01T00:00:00Z\",\"path\":\"/v1/announcements\"}"
+    }, {
+      "name" : "403 CANCEL requires CTO or legal approval.",
+      "originalRequest" : {
+        "method" : "POST",
+        "description" : "Extend the sunset deadline or cancel the deprecation\n\nResponses:\n- 200: Deprecation timeline updated.\n- 400: Invalid payload, missing fields, or invalid dates.\n- 403: CANCEL requires CTO or legal approval.\n- 404: Deprecation ID not found.\n- 500: Traffic telemetry or notification engine unavailable.",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json",
+          "type" : "text"
+        } ],
+        "body" : {
+          "mode" : "raw",
+          "raw" : "{\"action\":\"EXTEND\",\"newSunsetDate\":1814313600000,\"reason\":\"Three external partners requested additional migration time due to their release cycles.\",\"approvedBy\":\"cto@forgesphere.example.com\",\"legalJustification\":\"Regulatory clarification received — v1 remains compliant under updated rules.\",\"notifyConsumers\":true,\"notifyChannels\":[\"EMAIL\",\"DASHBOARD_BANNER\"]}",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        },
+        "url" : {
+          "raw" : "{{baseUrl}}/deprecations/:deprecationId/extend",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "deprecations", ":deprecationId", "extend" ],
+          "variable" : [ {
+            "key" : "deprecationId",
+            "value" : "00000000-0000-0000-0000-000000000001"
+          } ]
+        }
+      },
+      "status" : "CANCEL requires CTO or legal approval.",
+      "code" : 403,
+      "_postman_previewlanguage" : "json",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"status\":409,\"errorCode\":\"ALREADY_DEPRECATED\",\"message\":\"payment-processor v1 is already under deprecation (id: 9c8f1a3b).\",\"timestamp\":\"2026-01-01T00:00:00Z\",\"path\":\"/v1/announcements\"}"
+    }, {
+      "name" : "404 Deprecation ID not found.",
+      "originalRequest" : {
+        "method" : "POST",
+        "description" : "Extend the sunset deadline or cancel the deprecation\n\nResponses:\n- 200: Deprecation timeline updated.\n- 400: Invalid payload, missing fields, or invalid dates.\n- 403: CANCEL requires CTO or legal approval.\n- 404: Deprecation ID not found.\n- 500: Traffic telemetry or notification engine unavailable.",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json",
+          "type" : "text"
+        } ],
+        "body" : {
+          "mode" : "raw",
+          "raw" : "{\"action\":\"EXTEND\",\"newSunsetDate\":1814313600000,\"reason\":\"Three external partners requested additional migration time due to their release cycles.\",\"approvedBy\":\"cto@forgesphere.example.com\",\"legalJustification\":\"Regulatory clarification received — v1 remains compliant under updated rules.\",\"notifyConsumers\":true,\"notifyChannels\":[\"EMAIL\",\"DASHBOARD_BANNER\"]}",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        },
+        "url" : {
+          "raw" : "{{baseUrl}}/deprecations/:deprecationId/extend",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "deprecations", ":deprecationId", "extend" ],
+          "variable" : [ {
+            "key" : "deprecationId",
+            "value" : "00000000-0000-0000-0000-000000000001"
+          } ]
+        }
+      },
+      "status" : "Deprecation ID not found.",
+      "code" : 404,
+      "_postman_previewlanguage" : "json",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"status\":409,\"errorCode\":\"ALREADY_DEPRECATED\",\"message\":\"payment-processor v1 is already under deprecation (id: 9c8f1a3b).\",\"timestamp\":\"2026-01-01T00:00:00Z\",\"path\":\"/v1/announcements\"}"
+    }, {
+      "name" : "500 Traffic telemetry or notification engine unavailable.",
+      "originalRequest" : {
+        "method" : "POST",
+        "description" : "Extend the sunset deadline or cancel the deprecation\n\nResponses:\n- 200: Deprecation timeline updated.\n- 400: Invalid payload, missing fields, or invalid dates.\n- 403: CANCEL requires CTO or legal approval.\n- 404: Deprecation ID not found.\n- 500: Traffic telemetry or notification engine unavailable.",
+        "header" : [ {
+          "key" : "Content-Type",
+          "value" : "application/json",
+          "type" : "text"
+        } ],
+        "body" : {
+          "mode" : "raw",
+          "raw" : "{\"action\":\"EXTEND\",\"newSunsetDate\":1814313600000,\"reason\":\"Three external partners requested additional migration time due to their release cycles.\",\"approvedBy\":\"cto@forgesphere.example.com\",\"legalJustification\":\"Regulatory clarification received — v1 remains compliant under updated rules.\",\"notifyConsumers\":true,\"notifyChannels\":[\"EMAIL\",\"DASHBOARD_BANNER\"]}",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        },
+        "url" : {
+          "raw" : "{{baseUrl}}/deprecations/:deprecationId/extend",
+          "host" : [ "{{baseUrl}}" ],
+          "path" : [ "deprecations", ":deprecationId", "extend" ],
+          "variable" : [ {
+            "key" : "deprecationId",
+            "value" : "00000000-0000-0000-0000-000000000001"
+          } ]
+        }
+      },
+      "status" : "Traffic telemetry or notification engine unavailable.",
+      "code" : 500,
+      "_postman_previewlanguage" : "json",
+      "header" : [ {
+        "key" : "Content-Type",
+        "value" : "application/json"
+      } ],
+      "body" : "{\"status\":409,\"errorCode\":\"ALREADY_DEPRECATED\",\"message\":\"payment-processor v1 is already under deprecation (id: 9c8f1a3b).\",\"timestamp\":\"2026-01-01T00:00:00Z\",\"path\":\"/v1/announcements\"}"
+    } ]
+  } ]
+}
